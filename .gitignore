@@ -1,0 +1,8 @@
+transient
+elpa
+auto-save-list
+custom.el
+projects
+projectile-bookmarks.eld
+history
+*.swp
