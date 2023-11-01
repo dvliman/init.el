@@ -2,6 +2,7 @@ transient
 elpa
 auto-save-list
 custom.el
+custom.el~
 projects
 projectile-bookmarks.eld
 history
