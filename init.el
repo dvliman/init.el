@@ -3,8 +3,11 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
-(global-hl-line-mode t)
+;;(global-hl-line-mode t)
 (setq mac-command-modifier 'meta)
+
+(custom-set-variables
+ '(ns-right-command-modifier 'hyper))
 
 
 (setq custom-file "~/.emacs.d/custom.el")
@@ -95,15 +98,13 @@
 
 (use-package smartparens
   :defer t
-  :ensure t
   :diminish smartparens-mode
   :init
   (setq sp-override-key-bindings
-        '(("C-<right>" . nil)
-          ("C-<left>" . nil)
-          ("C-)" . sp-forward-slurp-sexp)
-          ("M-<backspace>" . nil)
-          ("C-(" . sp-forward-barf-sexp)))
+        '(("C-M-k" . sp-kill-sexp)
+	  ("C-M-j" . sp-copy-sexp)
+          ("C-M-f" . sp-forward-sexp)
+          ("C-M-b" . sp-backward-sexp)))
   :config
   (use-package smartparens-config)
   (sp-use-smartparens-bindings)
@@ -161,7 +162,7 @@
          ([remap Info-search] . consult-info)
          ;; C-x bindings in `ctl-x-map'
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("SPC ," . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
@@ -215,52 +216,22 @@
         xref-show-definitions-function #'consult-xref)
 
   :config
-
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key "M-.")
-  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (setq consult-preview-key 'any)
+  (setq consult-preview-key "M-.")
+  (setq consult-preview-key '("S-<down>" "S-<up>"))
   (consult-customize
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-file-register
    consult--source-recent-file consult--source-project-recent-file
-   ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any))
 
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; "C-+"
 
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+  (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
-  ;; By default `consult-project-function' uses `project-root' from project.el.
-  ;; Optionally configure a different project root function.
-  ;;;; 1. project.el (the default)
-  ;; (setq consult-project-function #'consult--default-project--function)
-  ;;;; 2. vc.el (vc-root-dir)
-  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-  ;;;; 3. locate-dominating-file
-  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-  ;;;; 4. projectile.el (projectile-project-root)
-  ;; (autoload 'projectile-project-root "projectile")
-  ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
-  ;;;; 5. No project support
-  ;; (setq consult-project-function nil)
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-function (lambda (_) (projectile-project-root)))
 )
 
-(use-package general
-  :config
-  (general-evil-setup t)
-  (general-auto-unbind-keys)
-  (general-create-definer leader-def
-    :states '(normal visual motion emacs insert)
-    :keymaps 'override
-    :prefix "SPC"
-    :global-prefix "C-SPC"))
