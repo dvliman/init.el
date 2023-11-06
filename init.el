@@ -9,6 +9,13 @@
 (custom-set-variables
  '(ns-right-command-modifier 'hyper))
 
+(global-set-key (kbd "M-z") 'undo)
+(global-set-key (kbd "M-v") 'evil-paste-pop)
+(global-set-key (kbd "C-M-j") 'sp-copy-sexp)
+(global-set-key (kbd "H-f") 'consult-line)
+(global-set-key (kbd "H-,") 'consult-buffer)
+(global-set-key (kbd "H-p") 'projectile-find-file)
+(global-set-key (kbd "H-g") 'projectile-grep)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
@@ -68,8 +75,7 @@
   (add-hook 'clojure-mode-hook #'subword-mode)           
   (add-hook 'clojure-mode-hook #'smartparens-mode)       
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'clojure-mode-hook #'eldoc-mode)             
-  (add-hook 'clojure-mode-hook #'idle-highlight-mode))
+  (add-hook 'clojure-mode-hook #'eldoc-mode))
 
 (use-package cider
   :ensure t
@@ -104,12 +110,7 @@
         '(("C-M-k" . sp-kill-sexp)
 	  ("C-M-j" . sp-copy-sexp)
           ("C-M-f" . sp-forward-sexp)
-          ("C-M-b" . sp-backward-sexp)))
-  :config
-  (use-package smartparens-config)
-  (sp-use-smartparens-bindings)
-  (sp--update-override-key-bindings)
-  :commands (smartparens-mode show-smartparens-mode))
+          ("C-M-b" . sp-backward-sexp))))
 
 (use-package vertico
   :init
